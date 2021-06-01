@@ -27,67 +27,79 @@ object Firestore {
 
     fun findAll(): List<UserPhoto> {
         val result = arrayListOf<UserPhoto>()
-        collection
-            .get()
-            .get().documents.apply {
-                forEach { doc ->
-                    val newUserPhoto = doc.toObject(UserPhoto::class.java)
-                    result.add(newUserPhoto)
+        runCatching {
+            collection
+                .get()
+                .get().documents.apply {
+                    forEach { doc ->
+                        val newUserPhoto = doc.toObject(UserPhoto::class.java)
+                        result.add(newUserPhoto)
+                    }
                 }
-            }
+        }
         return result
     }
 
     fun findByUserIdAndPhotoId(userId: String): UserPhoto? {
-        collection.whereEqualTo("userId", userId)
-            .get()
-            .get()
-            .documents.apply {
-                forEach { doc ->
-                    return doc.toObject(UserPhoto::class.java)
+        runCatching {
+            collection.whereEqualTo("userId", userId)
+                .get()
+                .get()
+                .documents.apply {
+                    forEach { doc ->
+                        return doc.toObject(UserPhoto::class.java)
+                    }
                 }
-            }
+        }
         return null
     }
 
     fun findById(id: Long): List<UserPhoto> {
         val result = arrayListOf<UserPhoto>()
-        collection.whereEqualTo("id", id)
-            .get()
-            .get()
-            .documents.apply {
-                forEach { doc ->
-                    val newUserPhoto = doc.toObject(UserPhoto::class.java)
-                    result.add(newUserPhoto)
+        runCatching {
+            collection.whereEqualTo("id", id)
+                .get()
+                .get()
+                .documents.apply {
+                    forEach { doc ->
+                        val newUserPhoto = doc.toObject(UserPhoto::class.java)
+                        result.add(newUserPhoto)
+                    }
                 }
-            }
+        }
         return result
     }
 
     fun save(userPhoto: UserPhoto) {
-        collection.document().set(userPhoto, SetOptions.merge())
+        runCatching {
+            collection.document().set(userPhoto, SetOptions.merge())
+        }
     }
 
     fun delete(userId: String) {
-        collection.whereEqualTo("userId", userId).get()
-            .get()
-            .documents.apply {
-                forEach { doc ->
-                    collection.document(doc.id).delete()
-                    return
+        runCatching {
+            collection.whereEqualTo("userId", userId).get()
+                .get()
+                .documents.apply {
+                    forEach { doc ->
+                        collection.document(doc.id).delete()
+                        return
+                    }
                 }
-            }
+        }
     }
 
     fun update(userId: String, newAuthor: String) {
-        collection.whereEqualTo("userId", userId).get()
-            .get()
-            .documents.apply {
-                forEach { doc ->
-                    collection.document(doc.id).update(FieldPath.of("photo", "author"), newAuthor)
-                    return
+        runCatching {
+            collection.whereEqualTo("userId", userId).get()
+                .get()
+                .documents.apply {
+                    forEach { doc ->
+                        collection.document(doc.id).update(FieldPath.of("photo", "author"), newAuthor)
+                        return
+                    }
                 }
-            }
+        }
     }
 }
 

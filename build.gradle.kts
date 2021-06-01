@@ -26,3 +26,7 @@ dependencies {
     implementation("com.google.firebase:firebase-admin:7.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.1")
 }
+
+tasks.create("stage") {
+    dependsOn("installDist")
+}
